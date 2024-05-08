@@ -1,0 +1,80 @@
+//seção importações 
+import {  Image,StyleSheet,View, Text, TouchableOpacity } from "react-native"
+import ClimUp from "../assets/ClimUp.png";
+import logo from "../assets/logo.png";
+import React, {useEffect, useState} from "react";
+
+import {useNavigation} from '@react-navigation/native'
+
+//como se fosse o body do html, no return é onde manda para a tela todos os elementos criados
+//precisa importar todos os elementos que usar do react native
+export const Home = () => {
+    //instancia funcao navegacao
+    const navigation = useNavigation();
+    return(
+        <View style={styles.container}>
+            <View style={styles.imgs}>
+                <Image style={styles.ClimUpImg} source={ClimUp}/>
+                <Image style={styles.logoImg} source={logo}/>
+            </View>
+
+            <View style={styles.btns}>
+                <TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate('login')} >
+                    <Text style={{ color:"white", fontWeight:"bold"}}>Entrar </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnCad} onPress={() => navigation.navigate('CadEmpresa')}>
+                    <Text style={{ color:"white", fontWeight:"bold"}}>Cadastrar Empresa</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+
+       
+    );
+}
+
+
+//styles onde define a estilizacao dos elementos
+//precisa ser importado do react natvie primeiro
+const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        alignItems: "center"
+    },
+    ClimUpImg:{
+        marginLeft:45,
+        marginBottom: 100
+    },
+
+    btns:{
+        marginTop: 150,
+        
+        
+    },
+    imgs:{
+        marginTop: 100
+    },
+    textButtons:{
+        color: "#fff"
+    },
+    btnEntrar:{
+        
+        alignItems:"center",
+        paddingLeft: 55,
+        paddingRight: 55,
+        paddingBottom: 10,
+        paddingTop: 10,
+        margin:10,
+        backgroundColor: '#457B9D',
+        borderRadius: 10
+    },
+    btnCad:{
+        alignItems: "center",
+        paddingLeft: 55,
+        paddingRight: 55,
+        paddingBottom: 10,
+        paddingTop: 10,
+        margin:10,
+        backgroundColor: '#457B9D',
+        borderRadius: 10
+    }
+})
