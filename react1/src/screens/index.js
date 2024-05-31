@@ -19,16 +19,11 @@ export const Home = () => {
             </View>
 
             <View style={styles.btns}>
-                <TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate('login')} >
-                    <Text style={{ color:"white", fontWeight:"bold"}}>Entrar </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnCad} onPress={() => navigation.navigate('CadEmpresa')}>
-                    <Text style={{ color:"white", fontWeight:"bold"}}>Cadastrar Empresa</Text>
+                <TouchableOpacity style={styles.btnLogCol} onPress={() => navigation.navigate('loginColaborador')} >
+                    <Text style={{ color:"white", fontWeight:"bold"}}>Entrar</Text>
                 </TouchableOpacity>
             </View>
         </View>
-
-       
     );
 }
 
@@ -46,6 +41,8 @@ const styles = StyleSheet.create({
     },
 
     btns:{
+        alignItems:"center",
+        width: "100%",
         marginTop: 150,
         
         
@@ -56,19 +53,9 @@ const styles = StyleSheet.create({
     textButtons:{
         color: "#fff"
     },
-    btnEntrar:{
-        
+    btnLogCol:{
+        width: "80%",
         alignItems:"center",
-        paddingLeft: 55,
-        paddingRight: 55,
-        paddingBottom: 10,
-        paddingTop: 10,
-        margin:10,
-        backgroundColor: '#457B9D',
-        borderRadius: 10
-    },
-    btnCad:{
-        alignItems: "center",
         paddingLeft: 55,
         paddingRight: 55,
         paddingBottom: 10,

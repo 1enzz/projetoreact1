@@ -1,0 +1,209 @@
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, Text, StyleSheet, View, TextInput, Button, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker'; 
+
+const RespostaQuestionario = ({ route, navigation }) => {
+    const { questionario, idColaborador, idCategoria } = route.params;
+    const [avaliados, setAvaliados] = useState([]);
+    const [selectedAvaliador, setSelectedAvaliador] = useState(null);
+    const [notas, setNotas] = useState({
+        nota1: 0,
+        nota2: 0,
+        nota3: 0,
+        nota4: 0,
+        nota5: 0,
+    });
+    const [comentario, setComentario] = useState('');
+
+    useEffect(() => {
+        // Fetch avaliado list
+        const fetchAvaliados = async () => {
+            const data = {
+                idColaborador: idColaborador
+            };
+            try {
+                const req = await fetch('http://192.168.15.6:3000/api/buscarAvaliados', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                if (req.ok) {
+                    const dados = await req.json();
+                    setAvaliados(dados);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar avaliados:', error);
+            }
+        };
+
+        fetchAvaliados();
+    }, [idColaborador]);
+
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch('http://192.168.15.6:3000/api/enviarResposta', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idQuestionario: questionario.Id,
+                    idColaboradorAvaliando: idColaborador,
+                    idColaboradorAvaliado: selectedAvaliador,
+                    notaPergunta1: notas.nota1,
+                    notaPergunta2: notas.nota2,
+                    notaPergunta3: notas.nota3,
+                    notaPergunta4: notas.nota4,
+                    notaPergunta5: notas.nota5,
+                    comentario,
+                    idCategoria
+                }),
+            });
+    
+            if (response.ok) {
+                alert('Resposta enviada com sucesso');
+                navigation.goBack();
+            } else {
+                alert('Erro ao enviar resposta');
+            }
+        } catch (error) {
+            console.error('Erro ao enviar resposta:', error);
+        }
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
+                <Text style={styles.title}>{questionario.NomeQuestionario}</Text>
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={selectedAvaliador}
+                        onValueChange={(itemValue) => setSelectedAvaliador(itemValue)}
+                        style={styles.picker}
+                        itemStyle={styles.pickerItem}
+                    >
+                        {avaliados.map((avaliado) => (
+                            <Picker.Item key={avaliado.idcolaborador} label={avaliado.nomecolaborador} value={avaliado.idcolaborador} />
+                        ))}
+                    </Picker>
+                </View>
+                {['Pergunta1', 'Pergunta2', 'Pergunta3', 'Pergunta4', 'Pergunta5'].map((pergunta, index) => (
+                    <View key={index} style={styles.questionContainer}>
+                        <Text style={styles.questionText}>{questionario[pergunta]}</Text>
+                        <View style={styles.optionsContainer}>
+                            {[1, 2, 3, 4, 5].map((nota) => (
+                                <TouchableOpacity key={nota} onPress={() => setNotas({ ...notas, [`nota${index + 1}`]: nota })} style={notas[`nota${index + 1}`] === nota ? styles.selectedNota : styles.nota}>
+                                    <Text>{nota}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                ))}
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="Comentário"
+                    value={comentario}
+                    onChangeText={setComentario}
+                    multiline
+                />
+                <Button title="Enviar" onPress={handleSubmit} />
+            </ScrollView>
+        </SafeAreaView>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
+    scrollView: {
+        padding: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#457B9D',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    pickerContainer: {
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#457B9D',
+        borderRadius: 5,
+        overflow: 'hidden',
+        backgroundColor: 'white',
+    },
+    picker: {
+        height: 40,
+        width: '100%',
+    },
+    pickerItem: {
+        height: 40,
+        color: 'black',
+        fontSize: 16,
+    },
+    questionContainer: {
+        marginBottom: 20,
+    },
+    questionText: {
+        fontSize: 18,
+        marginBottom: 10,
+        color: '#457B9D',
+    },
+    optionsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    nota: {
+        fontSize: 18,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#457B9D',
+        borderRadius: 5,
+        textAlign: 'center',
+        margin: 5,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    selectedNota: {
+        fontSize: 18,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#457B9D',
+        borderRadius: 5,
+        textAlign: 'center',
+        margin: 5,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#457B9D',
+        color: 'white',
+    },
+    textInput: {
+        height: 100,
+        borderColor: '#457B9D',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 20,
+    },
+    button: {
+        backgroundColor: '#457B9D',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+});
+
+export default RespostaQuestionario;
