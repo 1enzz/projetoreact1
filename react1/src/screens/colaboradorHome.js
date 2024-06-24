@@ -21,7 +21,7 @@ export const ColaboradorHome = ({ route }) => {
                 idColaborador
             };
 
-            const response = await fetch('http://192.168.15.6:3000/api/buscarQuestionarioDetalhado', {
+            const response = await fetch('http://192.168.15.10:3000/api/buscarQuestionarioDetalhado', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -31,11 +31,20 @@ export const ColaboradorHome = ({ route }) => {
 
             const dadosQuestionario = await response.json();
 
-            navigation.navigate('respostaQuestionario', {
-                questionario: dadosQuestionario[0], // Assume que a resposta é um array com um único objeto
-                idColaborador: idColaborador,
-                idCategoria: dadosQuestionario[0].idCategoria
-            });
+            if(dadosQuestionario[0].idCategoria == 2){
+                navigation.navigate('respostaQuestionario2', {
+                    questionario: dadosQuestionario[0], // Assume que a resposta é um array com um único objeto
+                    idColaborador: idColaborador,
+                    idCategoria: dadosQuestionario[0].idCategoria
+                });
+            }else{
+
+                navigation.navigate('respostaQuestionario', {
+                    questionario: dadosQuestionario[0], // Assume que a resposta é um array com um único objeto
+                    idColaborador: idColaborador,
+                    idCategoria: dadosQuestionario[0].idCategoria
+                });
+            }
         } catch (error) {
             console.error('Erro ao buscar questionário:', error);
         }

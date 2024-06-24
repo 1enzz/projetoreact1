@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, TextInput, Button, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; 
+import BtnVoltar from '../components/BtnVoltar';
 
-const RespostaQuestionario = ({ route, navigation }) => {
+const RespostaQuestionario2 = ({ route, navigation }) => {
     const { questionario, idColaborador, idCategoria } = route.params;
     const [avaliados, setAvaliados] = useState([]);
     const [selectedAvaliador, setSelectedAvaliador] = useState(null);
@@ -15,31 +16,10 @@ const RespostaQuestionario = ({ route, navigation }) => {
     });
     const [comentario, setComentario] = useState('');
 
-    useEffect(() => {
-        // Fetch avaliado list
-        const fetchAvaliados = async () => {
-            const data = {
-                idColaborador: idColaborador
-            };
-            try {
-                const req = await fetch('http://192.168.15.10:3000/api/buscarAvaliados', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                if (req.ok) {
-                    const dados = await req.json();
-                    setAvaliados(dados);
-                }
-            } catch (error) {
-                console.error('Erro ao buscar avaliados:', error);
-            }
-        };
+    const voltar =()=>{
+        navigation.goBack();
+    }
 
-        fetchAvaliados();
-    }, [idColaborador]);
 
     const handleSubmit = async () => {
         try {
@@ -76,18 +56,10 @@ const RespostaQuestionario = ({ route, navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
+            <BtnVoltar onPress={voltar}></BtnVoltar>
                 <Text style={styles.title}>{questionario.NomeQuestionario}</Text>
-                <View style={styles.pickerContainer}>
-                    <Picker
-                        selectedValue={selectedAvaliador}
-                        onValueChange={(itemValue) => setSelectedAvaliador(itemValue)}
-                        style={styles.picker}
-                        itemStyle={styles.pickerItem}
-                    >
-                        {avaliados.map((avaliado) => (
-                            <Picker.Item key={avaliado.idcolaborador} label={avaliado.nomecolaborador} value={avaliado.idcolaborador} />
-                        ))}
-                    </Picker>
+                <View >
+                   
                 </View>
                 {['Pergunta1', 'Pergunta2', 'Pergunta3', 'Pergunta4', 'Pergunta5'].map((pergunta, index) => (
                     <View key={index} style={styles.questionContainer}>
@@ -206,4 +178,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default RespostaQuestionario;
+export default RespostaQuestionario2;

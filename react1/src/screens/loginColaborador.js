@@ -44,7 +44,7 @@ export const LoginColaborador = () =>{
                     senhaColaboradorAtual: novaSenha
                 }
 
-                const resposta = await fetch('http://192.168.15.6:3000/api/alteraSenha',{
+                const resposta = await fetch('http://192.168.15.10:3000/api/alteraSenha',{
                     method: 'PUT',
                     headers:{
                         'Content-Type' : 'application/json'
@@ -82,7 +82,7 @@ export const LoginColaborador = () =>{
                     email: emailColaborador,
                     senhaColaborador: senhaColaborador
                 }
-                const respostaApi = await fetch('http://192.168.15.6:3000/api/loginColaborador',{
+                const respostaApi = await fetch('http://192.168.15.10:3000/api/loginColaborador',{
                     method: 'POST',
                     headers:{
                         'Content-Type': 'application/json'
