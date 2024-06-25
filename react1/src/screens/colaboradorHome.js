@@ -1,5 +1,5 @@
-import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
+import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View, Image, Dimensions } from "react-native";
 import BtnVoltar from "../components/BtnVoltar";
 import { useNavigation } from "@react-navigation/native";
 import ClimUp from "../assets/ClimUp.png";
@@ -9,12 +9,29 @@ export const ColaboradorHome = ({ route }) => {
     const navigation = useNavigation();
     const { nomeColaborador, formularios, idColaborador } = route.params;
 
+    const getMaxButtonWidth = () => {
+        let maxTextWidth = 0;
+        formularios.forEach(formulario => {
+            const textWidth = getTextWidth(formulario.Questionario);
+            if (textWidth > maxTextWidth) {
+                maxTextWidth = textWidth;
+            }
+        });
+        return maxTextWidth + 40; // Adicionando um espaço extra para o layout
+    };
+
+    const getTextWidth = (text) => {
+        // Implementação simples para obter uma estimativa da largura do texto
+        const textLength = text.length;
+        const fontSize = 16; // Tamanho do fonte, ajuste conforme necessário
+        return textLength * fontSize * 0.6; // Fator de ajuste para estimativa
+    };
+
     const voltar = () => {
-        navigation.goBack();
+        navigation.navigate('Home', { reload: true });
     };
 
     const vaiParaFormulario = async (idQuestionario) => {
-        // Chama a API para buscar os dados do questionário
         try {
             const data = {
                 idQuestionario,
@@ -31,16 +48,15 @@ export const ColaboradorHome = ({ route }) => {
 
             const dadosQuestionario = await response.json();
 
-            if(dadosQuestionario[0].idCategoria == 2){
+            if (dadosQuestionario[0].idCategoria === 2) {
                 navigation.navigate('respostaQuestionario2', {
-                    questionario: dadosQuestionario[0], // Assume que a resposta é um array com um único objeto
+                    questionario: dadosQuestionario[0],
                     idColaborador: idColaborador,
                     idCategoria: dadosQuestionario[0].idCategoria
                 });
-            }else{
-
+            } else {
                 navigation.navigate('respostaQuestionario', {
-                    questionario: dadosQuestionario[0], // Assume que a resposta é um array com um único objeto
+                    questionario: dadosQuestionario[0],
                     idColaborador: idColaborador,
                     idCategoria: dadosQuestionario[0].idCategoria
                 });
@@ -53,7 +69,7 @@ export const ColaboradorHome = ({ route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.topo}>
-                <Image style={styles.ClimUpImg} source={ClimUp}/>
+                <Image style={styles.ClimUpImg} source={ClimUp} />
                 <View style={styles.divVoltar}>
                     <BtnVoltar style={styles.btnVoltar} onPress={voltar}></BtnVoltar>
                 </View>
@@ -61,14 +77,18 @@ export const ColaboradorHome = ({ route }) => {
             <View style={styles.corpo}>
                 <View style={styles.divNome}>
                     <Image style={styles.perfil} source={Perfil} />
-                    <Text style={{color:'black', padding:5}}> {nomeColaborador}</Text>
+                    <Text style={{ color: 'black', padding: 5 }}> {nomeColaborador}</Text>
                 </View>
                 <View>
                     <Text style={styles.subtitle}>Formulários Disponíveis:</Text>
                 </View>
                 <View style={styles.formCard}>
                     {formularios.map((formulario) => (
-                        <TouchableOpacity key={formulario.Id} style={styles.button} onPress={() => vaiParaFormulario(formulario.Id)}>
+                        <TouchableOpacity
+                            key={formulario.Id}
+                            style={[styles.button, { width: getMaxButtonWidth() }]}
+                            onPress={() => vaiParaFormulario(formulario.Id)}
+                        >
                             <Text style={styles.buttonText}>{formulario.Questionario}</Text>
                         </TouchableOpacity>
                     ))}
@@ -93,15 +113,16 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#457B9D',
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
         borderRadius: 5,
         marginTop: 10,
-        width: "80%",
         alignItems: "center",
     },
     buttonText: {
         color: "white",
         fontWeight: "bold",
+        textAlign: "center",
     },
     topo: {
         flexDirection: 'row',
@@ -112,8 +133,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     ClimUpImg: {
-        width: 175, // Ajuste conforme necessário
-        height: 50, // Ajuste conforme necessário
+        width: 175,
+        height: 50,
     },
     corpo: {
         flex: 1,
@@ -136,20 +157,17 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     perfil: {
-        width: 15, // Ajuste conforme necessário
-        height: 15, // Ajuste conforme necessário
+        width: 15,
+        height: 15,
         marginRight: 5,
     },
     nomeColaborador: {
         color: 'black',
     },
-    formCard:{
+    formCard: {
         backgroundColor: 'transparent',
-        borderTopColor:0,
-        borderLeftColor:0,
-        borderRightColor:0,
-        borderWidth: 1,
-        borderColor: "#cde4f9",
+
+
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,

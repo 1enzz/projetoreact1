@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, StyleSheet, View, TextInput, Button, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, View, TextInput, Button, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; 
 import BtnVoltar from '../components/BtnVoltar';
 
@@ -22,38 +22,47 @@ const RespostaQuestionario2 = ({ route, navigation }) => {
 
 
     const handleSubmit = async () => {
-        try {
-            const response = await fetch('http://192.168.15.10:3000/api/enviarResposta', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    idQuestionario: questionario.Id,
-                    idColaboradorAvaliando: idColaborador,
-                    idColaboradorAvaliado: selectedAvaliador,
-                    notaPergunta1: notas.nota1,
-                    notaPergunta2: notas.nota2,
-                    notaPergunta3: notas.nota3,
-                    notaPergunta4: notas.nota4,
-                    notaPergunta5: notas.nota5,
-                    comentario,
-                    idCategoria
-                }),
-            });
-    
-            if (response.ok) {
-                alert('Resposta enviada com sucesso');
-                navigation.goBack();
-            } else {
-                alert('Erro ao enviar resposta');
+        if (notas.nota1 > 0 && notas.nota2 > 0 && notas.nota3 > 0 && notas.nota4 > 0 && notas.nota5 > 0) {
+            try {
+                const response = await fetch('http://192.168.15.10:3000/api/enviarResposta', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        idQuestionario: questionario.Id,
+                        idColaboradorAvaliando: idColaborador,
+                        idColaboradorAvaliado: selectedAvaliador,
+                        notaPergunta1: notas.nota1,
+                        notaPergunta2: notas.nota2,
+                        notaPergunta3: notas.nota3,
+                        notaPergunta4: notas.nota4,
+                        notaPergunta5: notas.nota5,
+                        comentario,
+                        idCategoria
+                    }),
+                });
+            
+                if (response.ok) {
+                    alert('Resposta enviada com sucesso');
+                    navigation.goBack();
+                } else {
+                    alert('Erro ao enviar resposta');
+                }
+            } catch (error) {
+                console.error('Erro ao enviar resposta:', error);
             }
-        } catch (error) {
-            console.error('Erro ao enviar resposta:', error);
+        }else {
+                Alert.alert('Por favor, selecione uma nota de 1 a 5 para todas as perguntas.');
         }
     };
 
     return (
+        <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Ajuste conforme necessário
+        >
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
             <BtnVoltar onPress={voltar}></BtnVoltar>
@@ -83,6 +92,7 @@ const RespostaQuestionario2 = ({ route, navigation }) => {
                 <Button title="Enviar" onPress={handleSubmit} />
             </ScrollView>
         </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 };
 

@@ -1,5 +1,5 @@
 //seção importações 
-import {  Image,StyleSheet,View, Text, TouchableOpacity } from "react-native"
+import {  Image,StyleSheet,View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import ClimUp from "../assets/ClimUp.png";
 import logo from "../assets/logo.png";
 import React, {useEffect, useState} from "react";
@@ -9,9 +9,19 @@ import {useNavigation} from '@react-navigation/native'
 //como se fosse o body do html, no return é onde manda para a tela todos os elementos criados
 //precisa importar todos os elementos que usar do react native
 export const Home = () => {
+    
     //instancia funcao navegacao
     const navigation = useNavigation();
     return(
+        <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Ajuste conforme necessário
+    >
+        <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            keyboardShouldPersistTaps="handled"
+        >
         <View style={styles.container}>
             <View style={styles.imgs}>
                 <Image style={styles.ClimUpImg} source={ClimUp}/>
@@ -24,6 +34,8 @@ export const Home = () => {
                 </TouchableOpacity>
             </View>
         </View>
+        </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
