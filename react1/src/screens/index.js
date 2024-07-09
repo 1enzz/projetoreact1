@@ -16,7 +16,7 @@ export const Home = () => {
         <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Ajuste conforme necessário
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} 
     >
         <ScrollView
             contentContainerStyle={styles.scrollContainer}

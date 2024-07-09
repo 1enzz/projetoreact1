@@ -22,7 +22,7 @@ const RespostaQuestionario = ({ route, navigation }) => {
                 idColaborador: idColaborador
             };
             try {
-                const req = await fetch('http://192.168.15.10:3000/api/buscarAvaliados', {
+                const req = await fetch('http://172.20.10.3:3000/api/buscarAvaliados', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ const RespostaQuestionario = ({ route, navigation }) => {
         // Verifica se todas as notas estão selecionadas de 1 a 5
         if (notas.nota1 > 0 && notas.nota2 > 0 && notas.nota3 > 0 && notas.nota4 > 0 && notas.nota5 > 0) {
             try {
-                const response = await fetch('http://192.168.15.10:3000/api/enviarResposta', {
+                const response = await fetch('http://172.20.10.3:3000/api/enviarResposta', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -17,14 +17,14 @@ export const ColaboradorHome = ({ route }) => {
                 maxTextWidth = textWidth;
             }
         });
-        return maxTextWidth + 40; // Adicionando um espaço extra para o layout
+        return maxTextWidth + 40; 
     };
 
     const getTextWidth = (text) => {
-        // Implementação simples para obter uma estimativa da largura do texto
+       
         const textLength = text.length;
-        const fontSize = 16; // Tamanho do fonte, ajuste conforme necessário
-        return textLength * fontSize * 0.6; // Fator de ajuste para estimativa
+        const fontSize = 16; 
+        return textLength * fontSize * 0.6; 
     };
 
     const voltar = () => {
@@ -38,7 +38,7 @@ export const ColaboradorHome = ({ route }) => {
                 idColaborador
             };
 
-            const response = await fetch('http://192.168.15.10:3000/api/buscarQuestionarioDetalhado', {
+            const response = await fetch('http://172.20.10.3:3000/api/buscarQuestionarioDetalhado', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -24,7 +24,7 @@ const RespostaQuestionario2 = ({ route, navigation }) => {
     const handleSubmit = async () => {
         if (notas.nota1 > 0 && notas.nota2 > 0 && notas.nota3 > 0 && notas.nota4 > 0 && notas.nota5 > 0) {
             try {
-                const response = await fetch('http://192.168.15.10:3000/api/enviarResposta', {
+                const response = await fetch('http://172.20.10.3:3000/api/enviarResposta', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const RespostaQuestionario2 = ({ route, navigation }) => {
         <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Ajuste conforme necessário
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} 
         >
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
